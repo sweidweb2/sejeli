@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "950190301827",
+    "project_id": "sejeli",
+    "storage_bucket": "sejeli.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950190301827:android:d79614fa8deba506e031b6",
+        "android_client_info": {
+          "package_name": "com.example.sejeli"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxq4JHRnmowVrXCX03Pq3F9j46jtJ20GU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
