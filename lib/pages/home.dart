@@ -16,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   bool isSearching = false;
   final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode(); // Add this line
 
   // Theme colors
   static const Color creamColor = Colors.white;
@@ -30,8 +31,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Ensure search field doesn't have focus when dependencies change
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !isSearching) {
+        searchFocusNode.unfocus();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     searchController.dispose();
+    searchFocusNode.dispose(); // Add this line
     super.dispose();
   }
 
@@ -47,6 +60,17 @@ class _HomePageState extends State<HomePage> {
         isSearching = true;
       }
     });
+  }
+
+  void _handleSearchFieldTap() {
+    if (!isLoading) {
+      setState(() {
+        filteredNames = individualNames;
+        isSearching = true;
+      });
+      // Only focus if user explicitly taps on the field
+      searchFocusNode.requestFocus();
+    }
   }
 
   Future<void> _loadIndividuals() async {
@@ -66,6 +90,11 @@ class _HomePageState extends State<HomePage> {
         filteredNames = individuals;
         isLoading = false;
       });
+      
+      // Ensure search field doesn't have focus after loading
+      if (mounted) {
+        searchFocusNode.unfocus();
+      }
     } catch (e) {
       if (!mounted) return;
       
@@ -245,6 +274,7 @@ class _HomePageState extends State<HomePage> {
                      ),
                      child: TextField(
                        controller: searchController,
+                       focusNode: searchFocusNode,
                        decoration: InputDecoration(
                          hintText: isLoading ? 'Loading individuals...' : 'Search or select an individual',
                          hintStyle: TextStyle(
@@ -278,6 +308,8 @@ class _HomePageState extends State<HomePage> {
                                        filteredNames = individualNames;
                                        isSearching = false;
                                      });
+                                     // Unfocus the search field when clearing
+                                     searchFocusNode.unfocus();
                                    },
                                  ),
                                )
@@ -287,18 +319,12 @@ class _HomePageState extends State<HomePage> {
                            vertical: isSmallScreen ? 12 : 16
                          ),
                        ),
-                      onChanged: _filterNames,
-                                             onTap: () {
-                         if (!isLoading) {
-                           setState(() {
-                             filteredNames = individualNames;
-                             isSearching = true;
-                           });
-                         }
-                       },
+                       onChanged: _filterNames,
+                       onTap: _handleSearchFieldTap,
                        readOnly: isLoading,
                        autofocus: false,
-                    ),
+                       enableInteractiveSelection: true,
+                     ),
                   ),
                   
                                      // Enhanced search results dropdown
@@ -358,6 +384,8 @@ class _HomePageState extends State<HomePage> {
                                   searchController.text = individual['name'] as String;
                                   isSearching = false;
                                 });
+                                // Unfocus the search field after selection
+                                searchFocusNode.unfocus();
                               },
                             ),
                           );
@@ -815,6 +843,9 @@ class _HomePageState extends State<HomePage> {
     }
 
     try {
+      // Unfocus the search field before creating the task
+      searchFocusNode.unfocus();
+      
       await DataBaseService().createTask(
         boxNumber.toString(),
         selectedDocumentId!,

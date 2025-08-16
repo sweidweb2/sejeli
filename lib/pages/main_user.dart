@@ -77,10 +77,12 @@ class _MainUserPageState extends State<MainUserPage> {
         ),
         child: SafeArea(
           child: Container(
-            height: isSmallScreen ? 70 : (isMediumScreen ? 80 : 90),
-            padding: EdgeInsets.symmetric(
-              horizontal: isSmallScreen ? 16 : (isMediumScreen ? 24 : 32),
-              vertical: isSmallScreen ? 8 : (isMediumScreen ? 12 : 16),
+            height: isSmallScreen ? 80 : (isMediumScreen ? 90 : 100),
+            padding: EdgeInsets.only(
+              left: isSmallScreen ? 16 : (isMediumScreen ? 24 : 32),
+              right: isSmallScreen ? 16 : (isMediumScreen ? 24 : 32),
+              top: isSmallScreen ? 8 : (isMediumScreen ? 12 : 16),
+              bottom: isSmallScreen ? 16 : (isMediumScreen ? 20 : 24),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
