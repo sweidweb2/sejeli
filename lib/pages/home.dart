@@ -88,12 +88,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 600;
+    final isMediumScreen = screenSize.width >= 600 && screenSize.width < 1200;
+    
     return Scaffold(
       backgroundColor: creamColor,
-             body: SafeArea(
-         child: SingleChildScrollView(
-           child: Column(
-             children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
             // Beautiful header section
             Container(
               width: double.infinity,
@@ -103,9 +107,9 @@ class _HomePageState extends State<HomePage> {
                   end: Alignment.bottomRight,
                   colors: [tealColor, darkTealColor],
                 ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(isSmallScreen ? 20 : 30),
+                  bottomRight: Radius.circular(isSmallScreen ? 20 : 30),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -116,189 +120,206 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              padding: const EdgeInsets.all(24.0),
+              padding: EdgeInsets.all(isSmallScreen ? 16.0 : 24.0),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'السجل الكشفي',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: IconButton(
-                          onPressed: () => _showCreateDialog(context),
-                          icon: const Icon(
-                            Icons.add_circle_outline,
-                            size: 32,
-                            color: Colors.white,
-                          ),
-                          tooltip: 'Create New',
-                        ),
-                      ),
+                                             Text(
+                         'السجل الكشفي',
+                         style: TextStyle(
+                           fontSize: isSmallScreen ? 22 : 28,
+                           fontWeight: FontWeight.bold,
+                           color: Colors.white,
+                         ),
+                       ),
+                       Container(
+                         decoration: BoxDecoration(
+                           color: Colors.white.withOpacity(0.2),
+                           borderRadius: BorderRadius.circular(isSmallScreen ? 25 : 50),
+                         ),
+                         child: IconButton(
+                           onPressed: () => _showCreateDialog(context),
+                           icon: Icon(
+                             Icons.add_circle_outline,
+                             size: isSmallScreen ? 24 : 32,
+                             color: Colors.white,
+                           ),
+                           tooltip: 'Create New',
+                         ),
+                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white.withOpacity(0.3)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.person_search,
-                          color: Colors.white.withOpacity(0.9),
-                          size: 24,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Select an individual to manage their scout record',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                                     SizedBox(height: isSmallScreen ? 16 : 20),
+                   Container(
+                     padding: EdgeInsets.symmetric(
+                       horizontal: isSmallScreen ? 16 : 20, 
+                       vertical: isSmallScreen ? 12 : 16
+                     ),
+                     decoration: BoxDecoration(
+                       color: Colors.white.withOpacity(0.15),
+                       borderRadius: BorderRadius.circular(isSmallScreen ? 16 : 20),
+                       border: Border.all(color: Colors.white.withOpacity(0.3)),
+                     ),
+                     child: Row(
+                       children: [
+                         Icon(
+                           Icons.person_search,
+                           color: Colors.white.withOpacity(0.9),
+                           size: isSmallScreen ? 20 : 24,
+                         ),
+                         SizedBox(width: isSmallScreen ? 10 : 12),
+                         Expanded(
+                           child: Text(
+                             'Select an individual to manage their scout record',
+                             style: TextStyle(
+                               color: Colors.white.withOpacity(0.9),
+                               fontSize: isSmallScreen ? 14 : 16,
+                             ),
+                           ),
+                         ),
+                       ],
+                     ),
+                   ),
                 ],
               ),
             ),
             
-                         // Search and selection section
-             Container(
-               margin: const EdgeInsets.all(20),
-               padding: const EdgeInsets.all(20),
-               decoration: BoxDecoration(
-                 color: Colors.white,
-                 borderRadius: BorderRadius.circular(20),
-                 border: Border.all(
-                   color: Colors.grey.shade200,
-                   width: 1,
-                 ),
-                 boxShadow: [
-                   BoxShadow(
-                     color: Colors.black.withOpacity(0.05),
-                     spreadRadius: 1,
-                     blurRadius: 10,
-                     offset: const Offset(0, 2),
-                   ),
-                 ],
-               ),
+                                      // Search and selection section
+              Container(
+                margin: EdgeInsets.all(isSmallScreen ? 12 : 20),
+                padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(isSmallScreen ? 16 : 20),
+                  border: Border.all(
+                    color: Colors.grey.shade200,
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: lightTealColor.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.people,
-                          color: tealColor,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Select Individual',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF2D3748),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
+                                     Row(
+                     children: [
+                       Container(
+                         padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
+                         decoration: BoxDecoration(
+                           color: lightTealColor.withOpacity(0.2),
+                           borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
+                         ),
+                         child: Icon(
+                           Icons.people,
+                           color: tealColor,
+                           size: isSmallScreen ? 20 : 24,
+                         ),
+                       ),
+                       SizedBox(width: isSmallScreen ? 10 : 12),
+                       Text(
+                         'Select Individual',
+                         style: TextStyle(
+                           fontSize: isSmallScreen ? 18 : 20,
+                           fontWeight: FontWeight.bold,
+                           color: const Color(0xFF2D3748),
+                         ),
+                       ),
+                     ],
+                   ),
+                   SizedBox(height: isSmallScreen ? 16 : 20),
                   
-                  // Enhanced search field
-                  Container(
-                    decoration: BoxDecoration(
-                      color: creamColor,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: lightTealColor.withOpacity(0.5)),
-                    ),
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: isLoading ? 'Loading individuals...' : 'Search or select an individual',
-                        hintStyle: TextStyle(color: Colors.grey.shade600),
-                        border: InputBorder.none,
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: tealColor,
-                        ),
-                        suffixIcon: selectedName != null
-                            ? Container(
-                                margin: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: tealColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.clear, color: Colors.white),
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedName = null;
-                                      selectedDocumentId = null;
-                                      searchController.clear();
-                                      filteredNames = individualNames;
-                                      isSearching = false;
-                                    });
-                                  },
-                                ),
-                              )
-                            : null,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                      ),
+                                     // Enhanced search field
+                   Container(
+                     decoration: BoxDecoration(
+                       color: creamColor,
+                       borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 15),
+                       border: Border.all(color: lightTealColor.withOpacity(0.5)),
+                     ),
+                     child: TextField(
+                       controller: searchController,
+                       decoration: InputDecoration(
+                         hintText: isLoading ? 'Loading individuals...' : 'Search or select an individual',
+                         hintStyle: TextStyle(
+                           color: Colors.grey.shade600,
+                           fontSize: isSmallScreen ? 14 : 16,
+                         ),
+                         border: InputBorder.none,
+                         prefixIcon: Icon(
+                           Icons.search,
+                           color: tealColor,
+                           size: isSmallScreen ? 20 : 24,
+                         ),
+                         suffixIcon: selectedName != null
+                             ? Container(
+                                 margin: EdgeInsets.all(isSmallScreen ? 6 : 8),
+                                 decoration: BoxDecoration(
+                                   color: tealColor,
+                                   borderRadius: BorderRadius.circular(isSmallScreen ? 16 : 20),
+                                 ),
+                                 child: IconButton(
+                                   icon: Icon(
+                                     Icons.clear, 
+                                     color: Colors.white,
+                                     size: isSmallScreen ? 18 : 24,
+                                   ),
+                                   onPressed: () {
+                                     setState(() {
+                                       selectedName = null;
+                                       selectedDocumentId = null;
+                                       searchController.clear();
+                                       filteredNames = individualNames;
+                                       isSearching = false;
+                                     });
+                                   },
+                                 ),
+                               )
+                             : null,
+                         contentPadding: EdgeInsets.symmetric(
+                           horizontal: isSmallScreen ? 16 : 20, 
+                           vertical: isSmallScreen ? 12 : 16
+                         ),
+                       ),
                       onChanged: _filterNames,
-                      onTap: () {
-                        if (!isLoading) {
-                          setState(() {
-                            filteredNames = individualNames;
-                            isSearching = true;
-                          });
-                        }
-                      },
-                      readOnly: isLoading,
+                                             onTap: () {
+                         if (!isLoading) {
+                           setState(() {
+                             filteredNames = individualNames;
+                             isSearching = true;
+                           });
+                         }
+                       },
+                       readOnly: isLoading,
+                       autofocus: false,
                     ),
                   ),
                   
-                  // Enhanced search results dropdown
-                  if (isSearching && filteredNames.isNotEmpty)
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      constraints: const BoxConstraints(maxHeight: 200),
+                                     // Enhanced search results dropdown
+                   if (isSearching && filteredNames.isNotEmpty)
+                     Container(
+                       margin: EdgeInsets.only(top: isSmallScreen ? 10 : 12),
+                       decoration: BoxDecoration(
+                         color: Colors.white,
+                         borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 15),
+                         boxShadow: [
+                           BoxShadow(
+                             color: Colors.black.withOpacity(0.1),
+                             spreadRadius: 1,
+                             blurRadius: 10,
+                             offset: const Offset(0, 4),
+                           ),
+                         ],
+                       ),
+                       constraints: BoxConstraints(
+                         maxHeight: isSmallScreen ? 150 : 200,
+                       ),
                       child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: filteredNames.length,
@@ -344,129 +365,51 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   
-                  // Enhanced selected name display
-                  if (selectedName != null && !isSearching)
-                    Container(
-                      margin: const EdgeInsets.only(top: 16),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [lightTealColor.withOpacity(0.3), tealColor.withOpacity(0.1)],
-                        ),
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: lightTealColor.withOpacity(0.5)),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: tealColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Selected Individual',
-                                  style: TextStyle(
-                                    color: tealColor,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Text(
-                                  selectedName!,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Color(0xFF2D3748),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
-                                      // Content area with grid
-             if (selectedName != null)
-               Container(
-                 margin: const EdgeInsets.symmetric(horizontal: 20),
-                 decoration: BoxDecoration(
-                   color: Colors.white,
-                   borderRadius: BorderRadius.circular(20),
-                   border: Border.all(
-                     color: Colors.grey.shade200,
-                     width: 1,
-                   ),
-                   boxShadow: [
-                     BoxShadow(
-                       color: Colors.black.withOpacity(0.05),
-                       spreadRadius: 1,
-                       blurRadius: 10,
-                       offset: const Offset(0, 2),
-                     ),
-                   ],
-                 ),
-                 child: Column(
-                   children: [
-                     // Enhanced grid header
+                                     // Enhanced selected name display
+                   if (selectedName != null && !isSearching)
                      Container(
-                       padding: const EdgeInsets.all(20),
+                       margin: EdgeInsets.only(top: isSmallScreen ? 12 : 16),
+                       padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
                        decoration: BoxDecoration(
                          gradient: LinearGradient(
-                           colors: [tealColor.withOpacity(0.1), lightTealColor.withOpacity(0.1)],
+                           colors: [lightTealColor.withOpacity(0.3), tealColor.withOpacity(0.1)],
                          ),
-                         borderRadius: const BorderRadius.only(
-                           topLeft: Radius.circular(20),
-                           topRight: Radius.circular(20),
-                         ),
+                         borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 15),
+                         border: Border.all(color: lightTealColor.withOpacity(0.5)),
                        ),
                        child: Row(
                          children: [
                            Container(
-                             padding: const EdgeInsets.all(8),
+                             padding: EdgeInsets.all(isSmallScreen ? 8 : 10),
                              decoration: BoxDecoration(
                                color: tealColor,
-                               borderRadius: BorderRadius.circular(10),
+                               borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
                              ),
-                             child: const Icon(
-                               Icons.grid_view,
+                             child: Icon(
+                               Icons.person,
                                color: Colors.white,
-                               size: 20,
+                               size: isSmallScreen ? 20 : 24,
                              ),
                            ),
-                           const SizedBox(width: 12),
+                           SizedBox(width: isSmallScreen ? 12 : 16),
                            Expanded(
                              child: Column(
                                crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
                                  Text(
-                                   'Scout Record Grid',
+                                   'Selected Individual',
                                    style: TextStyle(
-                                     fontSize: 20,
-                                     fontWeight: FontWeight.bold,
                                      color: tealColor,
+                                     fontSize: isSmallScreen ? 12 : 14,
+                                     fontWeight: FontWeight.w500,
                                    ),
                                  ),
                                  Text(
-                                   'Individual: $selectedName',
+                                   selectedName!,
                                    style: TextStyle(
-                                     fontSize: 16,
-                                     color: Colors.grey.shade600,
+                                     fontWeight: FontWeight.bold,
+                                     fontSize: isSmallScreen ? 16 : 18,
+                                     color: const Color(0xFF2D3748),
                                    ),
                                  ),
                                ],
@@ -475,20 +418,98 @@ class _HomePageState extends State<HomePage> {
                          ],
                        ),
                      ),
-                     
-                                           // Enhanced grid of 180 boxes
+                ],
+              ),
+            ),
+
+                                                   // Content area with grid
+              if (selectedName != null)
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: isSmallScreen ? 12 : 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(isSmallScreen ? 16 : 20),
+                    border: Border.all(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        spreadRadius: 1,
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                 child: Column(
+                   children: [
+                                           // Enhanced grid header
                       Container(
-                        padding: const EdgeInsets.all(20),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            childAspectRatio: 1.0,
+                        padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [tealColor.withOpacity(0.1), lightTealColor.withOpacity(0.1)],
                           ),
-                          itemCount: 180,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(isSmallScreen ? 16 : 20),
+                            topRight: Radius.circular(isSmallScreen ? 16 : 20),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
+                              decoration: BoxDecoration(
+                                color: tealColor,
+                                borderRadius: BorderRadius.circular(isSmallScreen ? 8 : 10),
+                              ),
+                              child: Icon(
+                                Icons.grid_view,
+                                color: Colors.white,
+                                size: isSmallScreen ? 18 : 20,
+                              ),
+                            ),
+                            SizedBox(width: isSmallScreen ? 10 : 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Scout Record Grid',
+                                    style: TextStyle(
+                                      fontSize: isSmallScreen ? 18 : 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: tealColor,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Individual: $selectedName',
+                                    style: TextStyle(
+                                      fontSize: isSmallScreen ? 14 : 16,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                     
+                                                                 // Enhanced grid of 180 boxes
+                       Container(
+                         padding: EdgeInsets.all(isSmallScreen ? 12 : 20),
+                         child: GridView.builder(
+                           shrinkWrap: true,
+                           physics: const NeverScrollableScrollPhysics(),
+                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                             crossAxisCount: isSmallScreen ? 4 : (isMediumScreen ? 5 : 6),
+                             crossAxisSpacing: isSmallScreen ? 8 : 12,
+                             mainAxisSpacing: isSmallScreen ? 8 : 12,
+                             childAspectRatio: 1.0,
+                           ),
+                           itemCount: 180,
                          itemBuilder: (context, index) {
                            final boxNumber = index + 1;
                            final hasTask = selectedDocumentId != null && 
@@ -528,36 +549,36 @@ class _HomePageState extends State<HomePage> {
                                    ),
                                  ],
                                ),
-                               child: Center(
-                                 child: Column(
-                                   mainAxisAlignment: MainAxisAlignment.center,
-                                   children: [
-                                     Text(
-                                       '$boxNumber',
-                                       style: TextStyle(
-                                         fontSize: 18,
-                                         fontWeight: FontWeight.bold,
-                                         color: hasTask ? Colors.white : tealColor,
-                                       ),
-                                     ),
-                                     if (hasTask) ...[
-                                       const SizedBox(height: 4),
-                                       Container(
-                                         padding: const EdgeInsets.all(4),
-                                         decoration: BoxDecoration(
-                                           color: Colors.white.withOpacity(0.2),
-                                           borderRadius: BorderRadius.circular(10),
-                                         ),
-                                         child: Icon(
-                                           Icons.check_circle,
-                                           size: 14,
-                                           color: Colors.white,
-                                         ),
-                                       ),
-                                     ],
-                                   ],
-                                 ),
-                               ),
+                                                               child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '$boxNumber',
+                                        style: TextStyle(
+                                          fontSize: isSmallScreen ? 14 : 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: hasTask ? Colors.white : tealColor,
+                                        ),
+                                      ),
+                                      if (hasTask) ...[
+                                        SizedBox(height: isSmallScreen ? 2 : 4),
+                                        Container(
+                                          padding: EdgeInsets.all(isSmallScreen ? 3 : 4),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.2),
+                                            borderRadius: BorderRadius.circular(isSmallScreen ? 8 : 10),
+                                          ),
+                                          child: Icon(
+                                            Icons.check_circle,
+                                            size: isSmallScreen ? 12 : 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
                              ),
                            );
                          },
@@ -566,66 +587,66 @@ class _HomePageState extends State<HomePage> {
                    ],
                  ),
                )
-                                      else
-               Container(
-                 margin: const EdgeInsets.all(20),
-                 padding: const EdgeInsets.all(40),
-                 decoration: BoxDecoration(
-                   color: Colors.white,
-                   borderRadius: BorderRadius.circular(20),
-                   border: Border.all(
-                     color: Colors.grey.shade200,
-                     width: 1,
-                   ),
-                   boxShadow: [
-                     BoxShadow(
-                       color: Colors.black.withOpacity(0.05),
-                       spreadRadius: 1,
-                       blurRadius: 10,
-                       offset: const Offset(0, 2),
-                     ),
-                   ],
-                 ),
-                 child: Center(
-                   child: Column(
-                     mainAxisSize: MainAxisSize.min,
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     children: [
-                       Container(
-                         padding: const EdgeInsets.all(20),
-                         decoration: BoxDecoration(
-                           color: lightTealColor.withOpacity(0.2),
-                           borderRadius: BorderRadius.circular(50),
-                         ),
-                         child: Icon(
-                           Icons.person_search,
-                           size: 80,
-                           color: tealColor,
-                         ),
-                       ),
-                       const SizedBox(height: 24),
-                       Text(
-                         'Select an Individual',
-                         style: TextStyle(
-                           fontSize: 24,
-                           fontWeight: FontWeight.bold,
-                           color: tealColor,
-                         ),
-                       ),
-                       const SizedBox(height: 12),
-                       Text(
-                         'Choose an individual from the dropdown above\nto view and manage their scout record',
-                         textAlign: TextAlign.center,
-                         style: TextStyle(
-                           fontSize: 16,
-                           color: Colors.grey.shade600,
-                           height: 1.5,
-                         ),
-                       ),
-                     ],
-                   ),
-                 ),
-               ),
+                                                   else
+                Container(
+                  margin: EdgeInsets.all(isSmallScreen ? 12 : 20),
+                  padding: EdgeInsets.all(isSmallScreen ? 24 : 40),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(isSmallScreen ? 16 : 20),
+                    border: Border.all(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        spreadRadius: 1,
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
+                          decoration: BoxDecoration(
+                            color: lightTealColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(isSmallScreen ? 40 : 50),
+                          ),
+                          child: Icon(
+                            Icons.person_search,
+                            size: isSmallScreen ? 60 : 80,
+                            color: tealColor,
+                          ),
+                        ),
+                        SizedBox(height: isSmallScreen ? 20 : 24),
+                        Text(
+                          'Select an Individual',
+                          style: TextStyle(
+                            fontSize: isSmallScreen ? 20 : 24,
+                            fontWeight: FontWeight.bold,
+                            color: tealColor,
+                          ),
+                        ),
+                        SizedBox(height: isSmallScreen ? 10 : 12),
+                        Text(
+                          'Choose an individual from the dropdown above\nto view and manage their scout record',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: isSmallScreen ? 14 : 16,
+                            color: Colors.grey.shade600,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
              ],
            ),
          ),
@@ -637,45 +658,63 @@ class _HomePageState extends State<HomePage> {
     final TextEditingController nameController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: lightTealColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(Icons.person_add, color: tealColor),
-              ),
-              const SizedBox(width: 12),
-              const Text('Create New Individual'),
-            ],
-          ),
+         showDialog(
+       context: context,
+       builder: (BuildContext context) {
+         final dialogScreenSize = MediaQuery.of(context).size;
+         final isDialogSmallScreen = dialogScreenSize.width < 600;
+         
+         return AlertDialog(
+           shape: RoundedRectangleBorder(
+             borderRadius: BorderRadius.circular(isDialogSmallScreen ? 16 : 20)
+           ),
+           title: Row(
+             children: [
+               Container(
+                 padding: EdgeInsets.all(isDialogSmallScreen ? 6 : 8),
+                 decoration: BoxDecoration(
+                   color: lightTealColor.withOpacity(0.2),
+                   borderRadius: BorderRadius.circular(isDialogSmallScreen ? 8 : 10),
+                 ),
+                 child: Icon(
+                   Icons.person_add, 
+                   color: tealColor,
+                   size: isDialogSmallScreen ? 20 : 24,
+                 ),
+               ),
+               SizedBox(width: isDialogSmallScreen ? 10 : 12),
+               Text(
+                 'Create New Individual',
+                 style: TextStyle(
+                   fontSize: isDialogSmallScreen ? 18 : 20,
+                 ),
+               ),
+             ],
+           ),
           content: Form(
             key: formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Enter individual name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: lightTealColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: tealColor, width: 2),
-                    ),
-                    prefixIcon: Icon(Icons.person, color: tealColor),
-                  ),
+                                 TextFormField(
+                   controller: nameController,
+                   decoration: InputDecoration(
+                     labelText: 'Name',
+                     hintText: 'Enter individual name',
+                     border: OutlineInputBorder(
+                       borderRadius: BorderRadius.circular(isDialogSmallScreen ? 10 : 12),
+                       borderSide: BorderSide(color: lightTealColor),
+                     ),
+                     focusedBorder: OutlineInputBorder(
+                       borderRadius: BorderRadius.circular(isDialogSmallScreen ? 10 : 12),
+                       borderSide: BorderSide(color: tealColor, width: 2),
+                     ),
+                     prefixIcon: Icon(
+                       Icons.person, 
+                       color: tealColor,
+                       size: isDialogSmallScreen ? 20 : 24,
+                     ),
+                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter a name';
@@ -736,15 +775,23 @@ class _HomePageState extends State<HomePage> {
                   }
                 }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: tealColor,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-              child: const Text('Create'),
+                             style: ElevatedButton.styleFrom(
+                 backgroundColor: tealColor,
+                 foregroundColor: Colors.white,
+                 shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(isDialogSmallScreen ? 10 : 12),
+                 ),
+                 padding: EdgeInsets.symmetric(
+                   horizontal: isDialogSmallScreen ? 20 : 24, 
+                   vertical: isDialogSmallScreen ? 10 : 12
+                 ),
+               ),
+               child: Text(
+                 'Create',
+                 style: TextStyle(
+                   fontSize: isDialogSmallScreen ? 14 : 16,
+                 ),
+               ),
             ),
           ],
         );
