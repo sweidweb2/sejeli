@@ -47,6 +47,23 @@ class DataBaseService {
     }
   }
 
+  // delete multiple individuals by their document ids
+  Future<void> deleteIndividuals(List<String> individualIds) async {
+    try {
+      if (individualIds.isEmpty) return;
+      WriteBatch batch = _firestore.batch();
+      for (final id in individualIds) {
+        final docRef = _firestore.collection('individuals').doc(id);
+        batch.delete(docRef);
+      }
+      await batch.commit();
+      print('Deleted ${individualIds.length} individuals');
+    } catch (e) {
+      print('Error deleting individuals: $e');
+      rethrow;
+    }
+  }
+
   // get leaderboard data sorted by task count
   Future<List<Map<String, dynamic>>> getLeaderboardData() async {
     try {
