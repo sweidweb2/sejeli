@@ -47,6 +47,66 @@ class DataBaseService {
     }
   }
 
+  // get leaderboard data sorted by task count
+  Future<List<Map<String, dynamic>>> getLeaderboardData() async {
+    try {
+      final querySnapshot = await _firestore.collection('individuals').get();
+      List<Map<String, dynamic>> leaderboardData = [];
+      
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data();
+        int taskCount = 0;
+        
+        // Count tasks if taskNumbers array exists
+        if (data.containsKey('taskNumbers') && data['taskNumbers'] is List) {
+          taskCount = (data['taskNumbers'] as List).length;
+        }
+        
+        leaderboardData.add({
+          'id': doc.id,
+          'name': data['name'] ?? 'Unknown User',
+          'taskCount': taskCount,
+        });
+      }
+      
+      // Sort by task count in descending order (highest first)
+      leaderboardData.sort((a, b) => (b['taskCount'] ?? 0).compareTo(a['taskCount'] ?? 0));
+      
+      return leaderboardData;
+    } catch (e) {
+      print('Error getting leaderboard data: $e');
+      return [];
+    }
+  }
+
+  // get individual user statistics
+  Future<Map<String, dynamic>?> getUserStats(String userId) async {
+    try {
+      final docSnapshot = await _firestore.collection('individuals').doc(userId).get();
+      
+      if (docSnapshot.exists) {
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+        int taskCount = 0;
+        
+        if (data.containsKey('taskNumbers') && data['taskNumbers'] is List) {
+          taskCount = (data['taskNumbers'] as List).length;
+        }
+        
+        return {
+          'id': docSnapshot.id,
+          'name': data['name'] ?? 'Unknown User',
+          'taskCount': taskCount,
+          'taskNumbers': data['taskNumbers'] ?? [],
+        };
+      }
+      
+      return null;
+    } catch (e) {
+      print('Error getting user stats: $e');
+      return null;
+    }
+  }
+
   //create task in the collection "tasks" and this collection is in the individual document
   Future<void> createTask(String taskNumber, String individualId) async {
       DocumentReference individualDoc = _firestore.collection('individuals').doc(individualId);

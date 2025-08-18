@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'profile.dart';
+import 'leadboards.dart';
 
 class MainUserPage extends StatefulWidget {
   const MainUserPage({Key? key}) : super(key: key);
@@ -20,7 +21,9 @@ class _MainUserPageState extends State<MainUserPage> {
   // List of pages to display
   final List<Widget> _pages = [
     const HomePage(),
+    const LeaderboardsPage(),
     const ProfilePage(),
+    
   ];
 
   // List of bottom navigation items
@@ -30,9 +33,14 @@ class _MainUserPageState extends State<MainUserPage> {
       label: 'Home',
     ),
     const BottomNavigationBarItem(
+      icon: Icon(Icons.leaderboard_rounded),
+      label: 'Leaderboard',
+    ),
+    const BottomNavigationBarItem(
       icon: Icon(Icons.person_rounded),
       label: 'Profile',
     ),
+    
   ];
 
   void _onItemTapped(int index) {
