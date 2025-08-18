@@ -150,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 16),
                             borderSide: BorderSide(color: tealColor, width: 2),
                           ),
+                          floatingLabelStyle: TextStyle(color: tealColor),
                           filled: true,
                           fillColor: Colors.grey.shade50,
                           contentPadding: EdgeInsets.symmetric(
@@ -197,6 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 16),
                             borderSide: BorderSide(color: tealColor, width: 2),
                           ),
+                          floatingLabelStyle: TextStyle(color: tealColor),
                           filled: true,
                           fillColor: Colors.grey.shade50,
                           contentPadding: EdgeInsets.symmetric(

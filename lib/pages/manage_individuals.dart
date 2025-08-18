@@ -11,7 +11,9 @@ class ManageIndividualsPage extends StatefulWidget {
 class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
   final DataBaseService _databaseService = DataBaseService();
   final Map<String, bool> _selectedById = {};
+  final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _individuals = [];
+  List<Map<String, dynamic>> _filteredIndividuals = [];
   bool _isLoading = true;
   bool _isDeleting = false;
 
@@ -25,6 +27,27 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
   void initState() {
     super.initState();
     _loadIndividuals();
+    _searchController.addListener(_filterIndividuals);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterIndividuals() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        _filteredIndividuals = _individuals;
+      } else {
+        _filteredIndividuals = _individuals
+            .where((individual) => 
+                individual['name'].toString().toLowerCase().contains(query))
+            .toList();
+      }
+    });
   }
 
   Future<void> _loadIndividuals() async {
@@ -36,6 +59,7 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
       final data = await _databaseService.getAllIndividuals();
       setState(() {
         _individuals = data;
+        _filteredIndividuals = data;
         _selectedById.clear();
         for (final person in data) {
           final id = person['id'] as String?;
@@ -224,15 +248,44 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
                 topRight: Radius.circular(15),
               ),
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    'Individuals (${_individuals.length})',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: darkTealColor,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Individuals (${_filteredIndividuals.length}/${_individuals.length})',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: darkTealColor,
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search individuals by name...',
+                    hintStyle: TextStyle(color: Colors.grey.shade600),
+                    prefixIcon: Icon(Icons.search, color: tealColor),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: tealColor, width: 2),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
               ],
@@ -249,7 +302,7 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
                     DataColumn(label: Text('Name')),
                     DataColumn(label: Text('Tasks')),
                   ],
-                  rows: _individuals.map((person) {
+                  rows: _filteredIndividuals.map((person) {
                     final String id = person['id'] ?? '';
                     final String name = person['name'] ?? 'Unknown';
                     final int tasks = _taskCountOf(person);

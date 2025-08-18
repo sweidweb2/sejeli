@@ -23,8 +23,8 @@ class _MainUserPageState extends State<MainUserPage> {
   final List<Widget> _pages = [
     const HomePage(),
     const LeaderboardsPage(),
-    const ProfilePage(),
     const ManageIndividualsPage(),
+    const ProfilePage(),
   ];
 
   // List of bottom navigation items
@@ -37,13 +37,14 @@ class _MainUserPageState extends State<MainUserPage> {
       icon: Icon(Icons.leaderboard_rounded),
       label: 'Leaderboard',
     ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.person_rounded),
-      label: 'Profile',
-    ),
+    
     const BottomNavigationBarItem(
       icon: Icon(Icons.manage_accounts_rounded),
       label: 'Manage Individuals',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.person_rounded),
+      label: 'Profile',
     ),
   ];
 

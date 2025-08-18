@@ -318,6 +318,10 @@ class _HomePageState extends State<HomePage> {
                            horizontal: isSmallScreen ? 16 : 20, 
                            vertical: isSmallScreen ? 12 : 16
                          ),
+                         focusedBorder: OutlineInputBorder(
+                           borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 15),
+                           borderSide: BorderSide(color: tealColor, width: 2),
+                         ),
                        ),
                        onChanged: _filterNames,
                        onTap: _handleSearchFieldTap,
@@ -737,6 +741,7 @@ class _HomePageState extends State<HomePage> {
                        borderRadius: BorderRadius.circular(isDialogSmallScreen ? 10 : 12),
                        borderSide: BorderSide(color: tealColor, width: 2),
                      ),
+                     floatingLabelStyle: TextStyle(color: tealColor),
                      prefixIcon: Icon(
                        Icons.person, 
                        color: tealColor,

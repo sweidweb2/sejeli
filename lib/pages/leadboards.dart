@@ -94,15 +94,16 @@ class _LeaderboardsPageState extends State<LeaderboardsPage> {
                       ),
                     ),
                   )
-                : Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      _buildHeader(),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: _buildLeaderboardTable(),
-                      ),
-                    ],
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        _buildHeader(),
+                        const SizedBox(height: 20),
+                        _buildLeaderboardTable(),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
       ),
     );
@@ -169,17 +170,17 @@ class _LeaderboardsPageState extends State<LeaderboardsPage> {
       child: Column(
         children: [
           _buildTableHeader(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _leaderboardData.length,
-              itemBuilder: (context, index) {
-                final user = _leaderboardData[index];
-                final rank = index + 1;
-                final taskCount = user['taskCount'] ?? 0;
-                
-                return _buildTableRow(user, rank, taskCount);
-              },
-            ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _leaderboardData.length,
+            itemBuilder: (context, index) {
+              final user = _leaderboardData[index];
+              final rank = index + 1;
+              final taskCount = user['taskCount'] ?? 0;
+              
+              return _buildTableRow(user, rank, taskCount);
+            },
           ),
         ],
       ),
