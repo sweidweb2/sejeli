@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final individuals = await DataBaseService().getAllIndividuals();
-      print('individuals: $individuals');
+      // print('individuals: $individuals');
       if (!mounted) return;
       
       setState(() {

@@ -3,6 +3,7 @@ import 'home.dart';
 import 'profile.dart';
 import 'leadboards.dart';
 import 'manage_individuals.dart';
+import 'takareer.dart';
 
 class MainUserPage extends StatefulWidget {
   const MainUserPage({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class _MainUserPageState extends State<MainUserPage> {
     const HomePage(),
     const LeaderboardsPage(),
     const ManageIndividualsPage(),
+    const TakareerPage(),
     const ProfilePage(),
   ];
 
@@ -41,6 +43,10 @@ class _MainUserPageState extends State<MainUserPage> {
     const BottomNavigationBarItem(
       icon: Icon(Icons.manage_accounts_rounded),
       label: 'Manage Individuals',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.calendar_month_rounded),
+      label: 'Takareer',
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.person_rounded),

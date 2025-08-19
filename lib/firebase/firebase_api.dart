@@ -27,7 +27,7 @@ class DataBaseService {
         'name': name,
       });
 
-      print('Individual created successfully');
+      // print('Individual created successfully');
     } catch (e) {
       print('Error creating individual: $e');
     }
@@ -57,7 +57,7 @@ class DataBaseService {
         batch.delete(docRef);
       }
       await batch.commit();
-      print('Deleted ${individualIds.length} individuals');
+      // print('Deleted ${individualIds.length} individuals');
     } catch (e) {
       print('Error deleting individuals: $e');
       rethrow;
@@ -128,9 +128,9 @@ class DataBaseService {
   Future<void> createTask(String taskNumber, String individualId) async {
       DocumentReference individualDoc = _firestore.collection('individuals').doc(individualId);
       DocumentSnapshot docSnapshot = await individualDoc.get();
-      print('docSnapshot: $docSnapshot');
-      print('individualId: $individualId');
-      print('taskNumber: $taskNumber');
+      // print('docSnapshot: $docSnapshot');
+      // print('individualId: $individualId');
+      // print('taskNumber: $taskNumber');
       if (docSnapshot.exists) {
         Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
         
@@ -155,9 +155,133 @@ class DataBaseService {
           });
         }
 
-        print('Task created successfully');
+        // print('Task created successfully');
       }
 
+  }
+
+  // Create a new takareer document in the "takareer" collection
+  Future<void> createTakareer({
+    required String title,
+    required String place,
+    required String day,
+    required String date,
+    required String number,
+  }) async {
+    try {
+      await _firestore.collection('takareer').add({
+        'title': title,
+        'place': place,
+        'day': day,
+        'date': date,
+        'number': number,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      // print('Takareer created successfully');
+    } catch (e) {
+      print('Error creating takareer: $e');
+      throw Exception('Failed to create takareer: $e');
+    }
+  }
+
+  // get all takareer
+  Future<List<Map<String, dynamic>>> getAllTakareer() async {
+    try {
+      final querySnapshot = await _firestore.collection('takareer').get();
+      return querySnapshot.docs.map((doc) => {
+        'id': doc.id,
+        ...doc.data(),
+      }).toList();
+    } catch (e) {
+      print('Error getting takareer: $e');
+      return [];
+    }
+  }
+
+  // Get takareer from start of current week to now
+  Future<List<Map<String, dynamic>>> getTakareerThisWeek() async {
+    try {
+      // Get the start of the current week (Sunday)
+      final now = DateTime.now();
+      final startOfWeek = now.subtract(Duration(days: now.weekday % 7));
+      final startOfWeekFormatted = DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+      
+      // Get all takareer
+      final querySnapshot = await _firestore.collection('takareer').get();
+      
+      // Filter takareer by date range
+      final filteredTakareer = <Map<String, dynamic>>[];
+      
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data();
+        final dateStr = data['date'] as String?;
+        
+        if (dateStr != null && dateStr.isNotEmpty) {
+          try {
+            // Parse the date string (assuming format: dd/MM/yyyy)
+            final dateParts = dateStr.split('/');
+            if (dateParts.length == 3) {
+              final day = int.parse(dateParts[0]);
+              final month = int.parse(dateParts[1]);
+              final year = int.parse(dateParts[2]);
+              final takareerDate = DateTime(year, month, day);
+              
+              // Check if takareer date is within this week
+              if (takareerDate.isAfter(startOfWeekFormatted.subtract(Duration(days: 1))) && 
+                  takareerDate.isBefore(now.add(Duration(days: 1)))) {
+                filteredTakareer.add({
+                  'id': doc.id,
+                  ...data,
+                });
+              }
+            }
+          } catch (e) {
+            // Skip invalid dates
+            continue;
+          }
+        }
+      }
+      
+      // Sort by date (newest first)
+      filteredTakareer.sort((a, b) {
+        try {
+          final aDateParts = (a['date'] as String).split('/');
+          final bDateParts = (b['date'] as String).split('/');
+          
+          final aDate = DateTime(
+            int.parse(aDateParts[2]),
+            int.parse(aDateParts[1]),
+            int.parse(aDateParts[0]),
+          );
+          final bDate = DateTime(
+            int.parse(bDateParts[2]),
+            int.parse(bDateParts[1]),
+            int.parse(bDateParts[0]),
+          );
+          // print('aDate: $aDate');
+          // print('bDate: $bDate');
+          return bDate.compareTo(aDate);
+        } catch (e) {
+          return 0;
+        }
+      });
+      
+      return filteredTakareer;
+    } catch (e) {
+      print('Error getting takareer for this week: $e');
+      return [];
+    }
+  }
+
+  // delete takareer by id
+  Future<void> deleteTakareer(String id) async {
+    try {
+      await _firestore.collection('takareer').doc(id).delete();
+      // print('Takareer deleted successfully');
+    } catch (e) {
+      print('Error deleting takareer: $e');
+      throw Exception('Failed to delete takareer: $e');
+    }
   }
 
 
