@@ -37,6 +37,7 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
   }
 
   void _filterIndividuals() {
+    if (!mounted) return;
     final query = _searchController.text.toLowerCase();
     setState(() {
       if (query.isEmpty) {
@@ -51,12 +52,14 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
   }
 
   Future<void> _loadIndividuals() async {
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
     });
 
     try {
       final data = await _databaseService.getAllIndividuals();
+      if (!mounted) return;
       setState(() {
         _individuals = data;
         _filteredIndividuals = data;
@@ -70,6 +73,7 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -95,9 +99,11 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
   Future<void> _deleteSelected() async {
     final ids = _selectedIds;
     if (ids.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No individuals selected')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No individuals selected')),
+        );
+      }
       return;
     }
 
@@ -122,6 +128,7 @@ class _ManageIndividualsPageState extends State<ManageIndividualsPage> {
 
     if (confirmed != true) return;
 
+    if (!mounted) return;
     setState(() {
       _isDeleting = true;
     });

@@ -388,8 +388,8 @@ Future<bool?> checkPassword( String password) async {
   }) async {
     try {
       String cleanPhoneNumber = phoneNumber.replaceAll(' ', '');
-      print('cleanPhoneNumber: $cleanPhoneNumber');
-      print('password: $password');
+      // print('cleanPhoneNumber: $cleanPhoneNumber');
+      // print('password: $password');
       final UserCredential result = await _firebaseAuth
           .signInWithEmailAndPassword(
             email: "${cleanPhoneNumber.trim()}@phone.com",

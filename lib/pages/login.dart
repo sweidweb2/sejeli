@@ -309,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () => {},
+                            onPressed: () => _navigateToRegister(context),
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(
                                 horizontal: isSmallScreen ? 8 : 12,

@@ -26,20 +26,24 @@ class _LeaderboardsPageState extends State<LeaderboardsPage> {
   }
 
   Future<void> _loadLeaderboardData() async {
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
     });
 
     try {
       final data = await _databaseService.getLeaderboardData();
+      if (!mounted) return;
       setState(() {
         _leaderboardData = data;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error loading leaderboard: $e')),
       );
