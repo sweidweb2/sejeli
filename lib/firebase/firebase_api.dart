@@ -142,16 +142,35 @@ class DataBaseService {
             await individualDoc.update({
               'taskNumbers': FieldValue.arrayRemove([taskNumber])
             });
+            
+            // Also remove from taskNumbers subcollection
+            final taskNumbersCollection = individualDoc.collection('taskNumbers');
+            final existingTaskQuery = await taskNumbersCollection.where('number', isEqualTo: taskNumber).get();
+            for (var doc in existingTaskQuery.docs) {
+              await doc.reference.delete();
+            }
           } else {
             // If task number doesn't exist, add it to the array
             await individualDoc.update({
               'taskNumbers': FieldValue.arrayUnion([taskNumber])
+            });
+            
+            // Also add to taskNumbers subcollection
+            await individualDoc.collection('taskNumbers').add({
+              'number': taskNumber,
+              'createdAt': FieldValue.serverTimestamp(),
             });
           }
         } else {
           // If taskNumbers field doesn't exist, create it with the new number
           await individualDoc.update({
             'taskNumbers': [taskNumber]
+          });
+          
+          // Also add to taskNumbers subcollection
+          await individualDoc.collection('taskNumbers').add({
+            'number': taskNumber,
+            'createdAt': FieldValue.serverTimestamp(),
           });
         }
 
@@ -284,7 +303,73 @@ class DataBaseService {
     }
   }
 
+  // get all medals
+  Future<List<Map<String, dynamic>>> getAllMedals() async {
+    try {
+      final querySnapshot = await _firestore.collection('Medals').get();
+      List<Map<String, dynamic>> medals = querySnapshot.docs.map((doc) => {
+        'id': doc.id,
+        ...doc.data(),
+      }).toList();
+      // print('medals: $medals');
+      return medals;
+    } catch (e) {
+      print('Error getting medals: $e');
+      return [];
+    }
+  }
 
+  // Create medal for individual
+  Future<void> createMedal(String medalId, String medalName, String individualId) async {
+    DocumentReference individualDoc = _firestore.collection('individuals').doc(individualId);
+    DocumentSnapshot docSnapshot = await individualDoc.get();
+    
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+      
+      if (data.containsKey('medals')) {
+        // Check if the medal already exists in the array
+        List<dynamic> existingMedals = data['medals'] ?? [];
+        if (existingMedals.contains(medalName)) {
+          // If medal exists, remove it from the array
+          await individualDoc.update({
+            'medals': FieldValue.arrayRemove([medalName])
+          });
+          
+          // Also remove from medals subcollection
+          final medalsCollection = individualDoc.collection('medals');
+          final existingMedalQuery = await medalsCollection.where('medalId', isEqualTo: medalId).get();
+          for (var doc in existingMedalQuery.docs) {
+            await doc.reference.delete();
+          }
+        } else {
+          // If medal doesn't exist, add it to the array
+          await individualDoc.update({
+            'medals': FieldValue.arrayUnion([medalName])
+          });
+          
+          // Also add to medals subcollection
+          await individualDoc.collection('medals').add({
+            'medalId': medalId,
+            'medalName': medalName,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+        }
+      } else {
+        // If medals field doesn't exist, create it with the new medal
+        await individualDoc.update({
+          'medals': [medalName]
+        });
+        
+        // Also add to medals subcollection
+        await individualDoc.collection('medals').add({
+          'medalId': medalId,
+          'medalName': medalName,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+    }
+  }
 }
 
 class AuthenticationService {

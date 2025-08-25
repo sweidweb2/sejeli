@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'sejel.dart';
 import 'profile.dart';
 import 'leadboards.dart';
-import 'manage_individuals.dart';
+import 'remove_individuals.dart';
 import 'takareer.dart';
 
 class MainUserPage extends StatefulWidget {
@@ -23,8 +23,8 @@ class _MainUserPageState extends State<MainUserPage> {
   // List of pages to display
   final List<Widget> _pages = [
     const HomePage(),
-    const LeaderboardsPage(),
-    const ManageIndividualsPage(),
+    // const LeaderboardsPage(),
+    // const ManageIndividualsPage(),
     const TakareerPage(),
     const ProfilePage(),
   ];
@@ -32,18 +32,18 @@ class _MainUserPageState extends State<MainUserPage> {
   // List of bottom navigation items
   final List<BottomNavigationBarItem> _bottomNavItems = [
     const BottomNavigationBarItem(
-      icon: Icon(Icons.home_rounded),
-      label: 'Home',
+      icon: Icon(Icons.task_rounded),
+      label: 'Sejel',
     ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.leaderboard_rounded),
-      label: 'Leaderboard',
-    ),
+    // const BottomNavigationBarItem(
+    //   icon: Icon(Icons.leaderboard_rounded),
+    //   label: 'Leaderboard',
+    // ),
     
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.manage_accounts_rounded),
-      label: 'Manage Individuals',
-    ),
+    // const BottomNavigationBarItem(
+    //   icon: Icon(Icons.manage_accounts_rounded),
+    //   label: 'Manage Individuals',
+    // ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.calendar_month_rounded),
       label: 'Takareer',
@@ -105,93 +105,188 @@ class _MainUserPageState extends State<MainUserPage> {
               top: isSmallScreen ? 6 : (isMediumScreen ? 10 : 14),
               bottom: isSmallScreen ? 12 : (isMediumScreen ? 16 : 20),
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: _bottomNavItems.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final item = entry.value;
-                  final isSelected = _selectedIndex == index;
-                  
-                  return GestureDetector(
-                    onTap: () => _onItemTapped(index),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: isSmallScreen ? 90 : (isMediumScreen ? 110 : 130),
-                      ),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isSmallScreen ? 8 : (isMediumScreen ? 10 : 14),
-                          vertical: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected 
-                              ? tealColor.withOpacity(0.1)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(
-                            isSmallScreen ? 14 : (isMediumScreen ? 18 : 22)
-                          ),
-                          border: Border.all(
-                            color: isSelected 
-                                ? tealColor.withOpacity(0.3)
-                                : Colors.transparent,
-                            width: isSmallScreen ? 1.0 : (isMediumScreen ? 1.5 : 2.0),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(
-                                isSmallScreen ? 4 : (isMediumScreen ? 5 : 7)
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Calculate if items will overflow
+                final totalItemWidth = _bottomNavItems.length * (isSmallScreen ? 90 : (isMediumScreen ? 110 : 130));
+                final availableWidth = constraints.maxWidth;
+                final willOverflow = totalItemWidth > availableWidth;
+                
+                if (willOverflow) {
+                  // Use horizontal scroll when items overflow
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: _bottomNavItems.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final item = entry.value;
+                        final isSelected = _selectedIndex == index;
+                        
+                        return GestureDetector(
+                          onTap: () => _onItemTapped(index),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: isSmallScreen ? 90 : (isMediumScreen ? 110 : 130),
+                            ),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isSmallScreen ? 8 : (isMediumScreen ? 10 : 14),
+                                vertical: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
                               ),
                               decoration: BoxDecoration(
                                 color: isSelected 
-                                    ? tealColor
-                                    : Colors.grey.shade300,
+                                    ? tealColor.withOpacity(0.1)
+                                    : Colors.transparent,
                                 borderRadius: BorderRadius.circular(
-                                  isSmallScreen ? 10 : (isMediumScreen ? 14 : 18)
+                                  isSmallScreen ? 14 : (isMediumScreen ? 18 : 22)
                                 ),
-                                boxShadow: isSelected ? [
-                                  BoxShadow(
-                                    color: tealColor.withOpacity(0.4),
-                                    spreadRadius: 1,
-                                    blurRadius: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
-                                    offset: Offset(0, isSmallScreen ? 1 : (isMediumScreen ? 2 : 3)),
+                                border: Border.all(
+                                  color: isSelected 
+                                      ? tealColor.withOpacity(0.3)
+                                      : Colors.transparent,
+                                  width: isSmallScreen ? 1.0 : (isMediumScreen ? 1.5 : 2.0),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(
+                                      isSmallScreen ? 4 : (isMediumScreen ? 5 : 7)
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isSelected 
+                                          ? tealColor
+                                          : Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(
+                                        isSmallScreen ? 10 : (isMediumScreen ? 14 : 18)
+                                      ),
+                                      boxShadow: isSelected ? [
+                                        BoxShadow(
+                                          color: tealColor.withOpacity(0.4),
+                                          spreadRadius: 1,
+                                          blurRadius: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
+                                          offset: Offset(0, isSmallScreen ? 1 : (isMediumScreen ? 2 : 3)),
+                                        ),
+                                      ] : null,
+                                    ),
+                                    child: Icon(
+                                      (item.icon as Icon).icon,
+                                      color: isSelected ? Colors.white : Colors.grey.shade600,
+                                      size: isSmallScreen ? 16 : (isMediumScreen ? 20 : 22),
+                                    ),
                                   ),
-                                ] : null,
-                              ),
-                              child: Icon(
-                                (item.icon as Icon).icon,
-                                color: isSelected ? Colors.white : Colors.grey.shade600,
-                                size: isSmallScreen ? 16 : (isMediumScreen ? 20 : 22),
+                                  SizedBox(height: isSmallScreen ? 2 : (isMediumScreen ? 3 : 4)),
+                                  Text(
+                                    item.label!,
+                                    style: TextStyle(
+                                      color: isSelected ? tealColor : Colors.grey.shade600,
+                                      fontSize: isSmallScreen ? 10 : (isMediumScreen ? 11 : 12),
+                                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(height: isSmallScreen ? 2 : (isMediumScreen ? 3 : 4)),
-                            Text(
-                              item.label!,
-                              style: TextStyle(
-                                color: isSelected ? tealColor : Colors.grey.shade600,
-                                fontSize: isSmallScreen ? 10 : (isMediumScreen ? 11 : 12),
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   );
-                }).toList(),
-              ),
+                } else {
+                  // Use equal spacing when items don't overflow
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: _bottomNavItems.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final item = entry.value;
+                      final isSelected = _selectedIndex == index;
+                      
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () => _onItemTapped(index),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: isSmallScreen ? 4 : (isMediumScreen ? 6 : 8),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isSmallScreen ? 8 : (isMediumScreen ? 10 : 14),
+                              vertical: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected 
+                                  ? tealColor.withOpacity(0.1)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                isSmallScreen ? 14 : (isMediumScreen ? 18 : 22)
+                              ),
+                              border: Border.all(
+                                color: isSelected 
+                                    ? tealColor.withOpacity(0.3)
+                                    : Colors.transparent,
+                                width: isSmallScreen ? 1.0 : (isMediumScreen ? 1.5 : 2.0),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(
+                                    isSmallScreen ? 4 : (isMediumScreen ? 5 : 7)
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected 
+                                        ? tealColor
+                                        : Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(
+                                      isSmallScreen ? 10 : (isMediumScreen ? 14 : 18)
+                                    ),
+                                    boxShadow: isSelected ? [
+                                      BoxShadow(
+                                        color: tealColor.withOpacity(0.4),
+                                        spreadRadius: 1,
+                                        blurRadius: isSmallScreen ? 6 : (isMediumScreen ? 8 : 10),
+                                        offset: Offset(0, isSmallScreen ? 1 : (isMediumScreen ? 2 : 3)),
+                                      ),
+                                    ] : null,
+                                  ),
+                                  child: Icon(
+                                    (item.icon as Icon).icon,
+                                    color: isSelected ? Colors.white : Colors.grey.shade600,
+                                    size: isSmallScreen ? 16 : (isMediumScreen ? 20 : 22),
+                                  ),
+                                ),
+                                SizedBox(height: isSmallScreen ? 2 : (isMediumScreen ? 3 : 4)),
+                                Text(
+                                  item.label!,
+                                  style: TextStyle(
+                                    color: isSelected ? tealColor : Colors.grey.shade600,
+                                    fontSize: isSmallScreen ? 10 : (isMediumScreen ? 11 : 12),
+                                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }
+              },
             ),
           ),
         ),

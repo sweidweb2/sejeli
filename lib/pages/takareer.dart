@@ -36,7 +36,11 @@ class _TakareerPageState extends State<TakareerPage> {
   
   // Data state
   List<Map<String, dynamic>> takareerList = [];
+  List<Map<String, dynamic>> filteredTakareerList = [];
   bool isLoading = false;
+  
+  // Filter state
+  String selectedFilter = 'all'; // 'all', 'today', 'week', 'month'
 
   @override
   void initState() {
@@ -67,6 +71,7 @@ class _TakareerPageState extends State<TakareerPage> {
       
       setState(() {
         takareerList = takareer;
+        _applyFilter();
         isLoading = false;
       });
     } catch (e) {
@@ -91,6 +96,57 @@ class _TakareerPageState extends State<TakareerPage> {
         }
       });
     }
+  }
+  
+  void _applyFilter() {
+    if (selectedFilter == 'all') {
+      filteredTakareerList = List.from(takareerList);
+      return;
+    }
+    
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    
+    filteredTakareerList = takareerList.where((takareer) {
+      try {
+        // Parse the date from the takareer
+        final dateStr = takareer['date'] as String?;
+        if (dateStr == null || dateStr.isEmpty) return false;
+        
+        // Parse date in DD/MM/YYYY format
+        final parts = dateStr.split('/');
+        if (parts.length != 3) return false;
+        
+        final day = int.parse(parts[0]);
+        final month = int.parse(parts[1]);
+        final year = int.parse(parts[2]);
+        final takareerDate = DateTime(year, month, day);
+        
+        switch (selectedFilter) {
+          case 'today':
+            return takareerDate.isAtSameMomentAs(today);
+          case 'week':
+            final weekStart = today.subtract(Duration(days: today.weekday - 1));
+            final weekEnd = weekStart.add(const Duration(days: 6));
+            return takareerDate.isAfter(weekStart.subtract(const Duration(days: 1))) &&
+                   takareerDate.isBefore(weekEnd.add(const Duration(days: 1)));
+          case 'month':
+            return takareerDate.year == today.year && takareerDate.month == today.month;
+          default:
+            return true;
+        }
+      } catch (e) {
+        // If date parsing fails, don't include in filtered results
+        return false;
+      }
+    }).toList();
+  }
+  
+  void _onFilterChanged(String filter) {
+    setState(() {
+      selectedFilter = filter;
+      _applyFilter();
+    });
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -407,6 +463,7 @@ class _TakareerPageState extends State<TakareerPage> {
           
           // Reload the takareer list
           await _loadTakareer();
+          _applyFilter();
         }
       } catch (e) {
         // Show error message
@@ -671,6 +728,57 @@ class _TakareerPageState extends State<TakareerPage> {
       ],
     );
   }
+  
+  Widget _buildFilterChip(String filter, String label, IconData icon) {
+    final isSelected = selectedFilter == filter;
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 600;
+    
+    return GestureDetector(
+      onTap: () => _onFilterChanged(filter),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: isSmallScreen ? 12 : 16,
+          vertical: isSmallScreen ? 8 : 12,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? tealColor : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(isSmallScreen ? 20 : 25),
+          border: Border.all(
+            color: isSelected ? tealColor : Colors.grey.shade300,
+            width: 1.5,
+          ),
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: tealColor.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ] : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: isSmallScreen ? 16 : 18,
+              color: isSelected ? Colors.white : tealColor,
+            ),
+            SizedBox(width: isSmallScreen ? 6 : 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : tealColor,
+                fontSize: isSmallScreen ? 12 : 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -815,6 +923,73 @@ class _TakareerPageState extends State<TakareerPage> {
                 ),
               ),
               
+                             // Filter section
+               Container(
+                 margin: EdgeInsets.only(
+                   top: isSmallScreen ? 16 : 20,
+                   left: isSmallScreen ? 12 : 20,
+                   right: isSmallScreen ? 12 : 20,
+                 ),
+                padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(isSmallScreen ? 16 : 20),
+                  border: Border.all(
+                    color: Colors.grey.shade200,
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(isSmallScreen ? 6 : 8),
+                          decoration: BoxDecoration(
+                            color: lightTealColor.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(isSmallScreen ? 8 : 10),
+                          ),
+                          child: Icon(
+                            Icons.filter_list,
+                            color: tealColor,
+                            size: isSmallScreen ? 18 : 20,
+                          ),
+                        ),
+                        SizedBox(width: isSmallScreen ? 10 : 12),
+                        Text(
+                          'تصفية النشاطات',
+                          style: TextStyle(
+                            fontSize: isSmallScreen ? 16 : 18,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF2D3748),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: isSmallScreen ? 16 : 20),
+                    Wrap(
+                      spacing: isSmallScreen ? 8 : 12,
+                      runSpacing: isSmallScreen ? 8 : 12,
+                      children: [
+                        _buildFilterChip('all', 'الكل', Icons.all_inclusive),
+                        _buildFilterChip('today', 'اليوم', Icons.today),
+                        _buildFilterChip('week', 'هذا الأسبوع', Icons.view_week),
+                        _buildFilterChip('month', 'هذا الشهر', Icons.calendar_month),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              
               // Content area
               if (isLoading)
                 Container(
@@ -838,7 +1013,7 @@ class _TakareerPageState extends State<TakareerPage> {
                     ),
                   ),
                 )
-              else if (takareerList.isEmpty)
+              else if (filteredTakareerList.isEmpty)
                 Container(
                   margin: EdgeInsets.all(isSmallScreen ? 12 : 20),
                   padding: EdgeInsets.all(isSmallScreen ? 24 : 40),
@@ -877,7 +1052,7 @@ class _TakareerPageState extends State<TakareerPage> {
                         ),
                         SizedBox(height: isSmallScreen ? 20 : 24),
                         Text(
-                          'لا توجد نشاطات بعد',
+                          selectedFilter == 'all' ? 'لا توجد نشاطات بعد' : 'لا توجد نشاطات في هذا الفترة',
                           style: TextStyle(
                             fontSize: isSmallScreen ? 20 : 24,
                             fontWeight: FontWeight.bold,
@@ -886,7 +1061,9 @@ class _TakareerPageState extends State<TakareerPage> {
                         ),
                         SizedBox(height: isSmallScreen ? 10 : 12),
                         Text(
-                          'اضغط على زر الإضافة أعلاه لإنشاء أول نشاط',
+                          selectedFilter == 'all' 
+                              ? 'اضغط على زر الإضافة أعلاه لإنشاء أول نشاط'
+                              : 'جرب تغيير الفلتر أو إضافة نشاط جديد',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: isSmallScreen ? 14 : 16,
@@ -930,7 +1107,7 @@ class _TakareerPageState extends State<TakareerPage> {
                             ),
                             SizedBox(width: isSmallScreen ? 10 : 12),
                             Text(
-                              'قائمة النشاطات (${takareerList.length})',
+                              'قائمة النشاطات (${filteredTakareerList.length}/${takareerList.length})',
                               style: TextStyle(
                                 fontSize: isSmallScreen ? 18 : 20,
                                 fontWeight: FontWeight.bold,
@@ -945,9 +1122,9 @@ class _TakareerPageState extends State<TakareerPage> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: takareerList.length,
+                        itemCount: filteredTakareerList.length,
                         itemBuilder: (context, index) {
-                          return _buildTakareerCard(takareerList[index], index);
+                          return _buildTakareerCard(filteredTakareerList[index], index);
                         },
                       ),
                     ],

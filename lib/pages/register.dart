@@ -206,6 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 16),
                             borderSide: BorderSide(color: tealColor, width: 2),
                           ),
+                          floatingLabelStyle: TextStyle(color: tealColor),
                           filled: true,
                           fillColor: Colors.grey.shade50,
                           contentPadding: EdgeInsets.symmetric(
@@ -245,6 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 16),
                             borderSide: BorderSide(color: tealColor, width: 2),
                           ),
+                          floatingLabelStyle: TextStyle(color: tealColor),
                           filled: true,
                           fillColor: Colors.grey.shade50,
                           contentPadding: EdgeInsets.symmetric(
@@ -284,6 +286,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 16),
                             borderSide: BorderSide(color: tealColor, width: 2),
                           ),
+                          floatingLabelStyle: TextStyle(color: tealColor),
                           filled: true,
                           fillColor: Colors.grey.shade50,
                           contentPadding: EdgeInsets.symmetric(
@@ -333,6 +336,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 16),
                             borderSide: BorderSide(color: tealColor, width: 2),
                           ),
+                          floatingLabelStyle: TextStyle(color: tealColor),
                           filled: true,
                           fillColor: Colors.grey.shade50,
                           contentPadding: EdgeInsets.symmetric(
@@ -383,6 +387,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 16),
                             borderSide: BorderSide(color: tealColor, width: 2),
                           ),
+                          floatingLabelStyle: TextStyle(color: tealColor),
                           filled: true,
                           fillColor: Colors.grey.shade50,
                           contentPadding: EdgeInsets.symmetric(
